@@ -10,10 +10,10 @@
 [`Back to top`](#Assignment)
   
 ## Members
- * [***Jiang Yuping***]()
- * [***Kong Pingfan***](https://github.com/KongPingfanCHN)
- * [***Liu Zonghua***]()
- * [***Wu Yufeng***]()
+ * [***`Jiang Yuping`***](https://github.com/Catheriny)
+ * [***`Kong Pingfan`***](https://github.com/KongPingfanCHN)
+ * [***`Liu Zonghua`***](https://github.com/18612087128)
+ * [***`Wu Yufeng`***](https://github.com/1756604347)
   
 [`Back to top`](#Assignment)
   
