@@ -1,13 +1,15 @@
 #%% Import Libraries
 
+import os
 import numpy as np
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import LSTM
-from tensorflow.keras.models import Sequential
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset
+from tqdm import tqdm
 
 
 #%% Function Definition
@@ -52,50 +54,83 @@ def scale(train, test):
     # transform test
     test_scaled = scaler.transform(test)
 
-    # # transform train
-    # train = train.reshape(train.shape[0], train.shape[1])
-    # train_scaled = scaler.transform(train)
-    #
-    # # transform test
-    # test = test.reshape(test.shape[0], test.shape[1])
-    # test_scaled = scaler.transform(test)
     return scaler, train_scaled, test_scaled
 
 
 # inverse scaling for a forecasted value
-def invert_scale(scaler, X, value):
+def invert_scale(scaler, x, value):
     # Make sure X is a list
-    if isinstance(X, np.ndarray):
-        X = X.tolist()
+    if isinstance(x, np.ndarray):
+        x = x.tolist()
 
-    new_row = [x for x in X] + [value]
+    new_row = [x for x in x] + [value]
     array = np.array(new_row)
     array = array.reshape(1, len(array))
     inverted = scaler.inverse_transform(array)
     return inverted[0, -1]
 
-    # new_row = X + [value]
-    # array = np.array(new_row).reshape(1, -1)
-    # inverted = scaler.inverse_transform(array)
-    # return inverted[0, -1]
+
+class TimeSeriesDataset(Dataset):
+    def __init__(self, data):
+        super(TimeSeriesDataset, self).__init__()
+        self.data = data
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        input_sequence, target_value = self.data[idx, :-1], self.data[idx, -1]
+        input_sequence = torch.tensor(input_sequence, dtype=torch.float32).unsqueeze(-1)
+        target_value = torch.tensor(target_value, dtype=torch.float32)
+        return input_sequence, target_value
 
 
-# fit an LSTM network to training data
-def fit_lstm(train, batch_size, nb_epoch, neurons):
-    X, y = train[:, 0:-1], train[:, -1]
-    X = X.reshape(X.shape[0], 1, X.shape[1])
-    model = Sequential()
-    model.add(LSTM(neurons, batch_input_shape=(batch_size, X.shape[1], X.shape[2]), stateful=True))
-    model.add(Dense(1))
-    model.compile(loss='mean_squared_error', optimizer='adam')
-    for i in range(nb_epoch):
-        model.fit(X, y, epochs=1, batch_size=batch_size, verbose=1, shuffle=False)
-        model.reset_states()
-    return model
+# Define LSTM model using PyTorch
+class LSTM(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size, num_layers=1):
+        super(LSTM, self).__init__()
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x):
+        h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(x.device)
+        c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(x.device)
+        out, _ = self.lstm(x, (h0, c0))
+        out = self.fc(out[:, -1, :])
+        return out
+
+
+# Training function
+def train_model(model, device, train_loader, criterion, optimizer, num_epochs, save_path='model'):
+    model.train()
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    for epoch in range(num_epochs):
+        progress_bar = tqdm(train_loader, desc=f'Epoch {epoch + 1}/{num_epochs}')
+        for i, (inputs, targets) in enumerate(train_loader):
+            inputs = inputs.float().to(device)
+            targets = targets.float().to(device)
+            inputs = inputs.view(-1, 1, inputs.size(-2))  # 改变inputs的维度
+            outputs = model(inputs)
+            loss = criterion(outputs, targets)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            progress_bar.set_postfix(loss=loss.item())
+            progress_bar.update()
+
+        # 保存模型
+        torch.save(model.state_dict(), os.path.join(save_path, f'model_epoch_{epoch + 1}.pth'))
 
 
 # make a one-step forecast
-def forecast_lstm(model, batch_size, X):
-    X = X.reshape(1, 1, len(X))
-    yhat = model.predict(X, batch_size=batch_size)
-    return yhat[0, 0]
+def forecast_lstm(model, device, x):
+    model.eval()
+    with torch.no_grad():
+        x = torch.tensor(x).unsqueeze(0).unsqueeze(-1).float().to(device)
+        x = x.view(1, 1, -1)  # 确保x的维度正确
+        yhat = model(x)
+    return yhat.item()
