@@ -29,7 +29,6 @@
   
 ## Python Version
 **`Python`** **`3.9.18`**  
-**`Python`** **`3.7.0`**  
   
 [`Back to top`](#Assignment)
   
