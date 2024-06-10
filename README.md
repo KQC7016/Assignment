@@ -45,10 +45,18 @@ pytorch
 
   
 ## Assignment - Data Driven Solution for Engineering Problem (15%)
-* Study carefully dataset Lab3.csv .
-* Study the program Lab3a.py to understand the principle of ANOVA.
-* In the report, explain the code; and give conclusion to the output.
-* Write a program Lab3b.py to perform the same test above, but instead of comparing the gender, we compare the effects of diet on different age groups (define the age groups yourself).
+  
+Submit the following: (save as GroupX.zip or GroupX.rar)
+1. Report (10%) (not more than 10 pages)
+  * Cover Page: Title and Name&Student ID of members
+  * Introduction
+  * Literature Review: A brief review of existing DL Solutions
+  * The Chosen Solution & Simulation
+  * Results & Discussion
+  * References
+  * Link to download Video, Code & Dataset.
+2. Video Presentation & Demonstration (5%)
+3. Code & Dataset
   
 ***`Deadline`***: ***`10 June 2024`***
   
