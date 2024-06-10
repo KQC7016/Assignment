@@ -2,20 +2,47 @@
   
   
 ## Table of Contents
- * [***Members***](#Members)
- * [***Assignment***](#assignment---data-driven-solution-for-engineering-problem-15)
+ * [***Our Group***](#Members)
+ * 
  * [***Python Version***](#Python-Version)
  * [***Libraries Used***](#Libraries-Used)
+ * [***Assignment***](#assignment---data-driven-solution-for-engineering-problem-15)
   
 [`Back to top`](#Assignment)
   
-## Members
- * [***`Jiang Yuping`***](https://github.com/Catheriny)
- * [***`Kong Pingfan`***](https://github.com/KongPingfanCHN)
- * [***`Liu Zonghua`***](https://github.com/18612087128)
- * [***`Wu Yufeng`***](https://github.com/1756604347)
+## Our Group
+  
+[***`Group9-KQC7016`***](https://github.com/KQC7016)
   
 [`Back to top`](#Assignment)
+  
+## Python Version
+**`Python`** **`3.9.18`**  
+  
+[`Back to top`](#Assignment)
+  
+## Libraries Used
+  
+matplotlib
+```cmd
+
+```
+
+  numpy
+```cmd
+
+```
+
+pandas
+```cmd
+
+```
+  
+pytorch
+```cmd
+
+```
+
   
 ## Assignment - Data Driven Solution for Engineering Problem (15%)
 * Study carefully dataset Lab3.csv .
@@ -26,11 +53,4 @@
 ***`Deadline`***: ***`10 June 2024`***
   
 [`Back to top`](#Assignment)
-  
-## Python Version
-**`Python`** **`3.9.18`**  
-  
-[`Back to top`](#Assignment)
-  
-## Libraries Used
   
