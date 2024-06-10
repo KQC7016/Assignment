@@ -3,7 +3,6 @@
   
 ## Table of Contents
  * [***Our Group***](#Members)
- * 
  * [***Python Version***](#Python-Version)
  * [***Libraries Used***](#Libraries-Used)
  * [***Assignment***](#assignment---data-driven-solution-for-engineering-problem-15)
@@ -25,24 +24,25 @@
   
 matplotlib
 ```cmd
-
+pip3 install matplotlib
 ```
-
-  numpy
+  
+numpy
 ```cmd
-
+pip3 install numpy
 ```
-
+  
 pandas
 ```cmd
-
+pip3 install pandas
 ```
   
 pytorch
 ```cmd
-
+pip3 install pytorch
 ```
-
+  
+[`Back to top`](#Assignment)
   
 ## Assignment - Data Driven Solution for Engineering Problem (15%)
   
